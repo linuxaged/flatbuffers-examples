@@ -1,4 +1,4 @@
-#include <cstdio>
+ï»¿#include <cstdio>
 #include "flatbuffers/flatbuffers.h"
 #include "wall_generated.h"
 
@@ -10,7 +10,7 @@ int main()
 
 	auto str = fbb.CreateString("GoGoGo!");
 	auto uid = fbb.CreateString("madi");
-	auto content = fbb.CreateString("ÎÒ´ÓÔ¶·½À´¡£¡£¡£");
+	auto content = fbb.CreateString("å“‡å¡žå“ˆ");
 
 	auto c0 = CreateComment(fbb, 1, 999, uid, content);
 
