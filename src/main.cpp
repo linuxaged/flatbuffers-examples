@@ -1,8 +1,18 @@
 ﻿#include <cstdio>
 #include "flatbuffers/flatbuffers.h"
 #include "wall_generated.h"
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector> 
+#include <string>
+#include <time.h>
+
+#define fontCount 1487
 
 using namespace mj2::schema;
+
+std::vector<std::string> sFont;
 
 void Deserialize(char const* buffer)
 {
@@ -64,22 +74,38 @@ std::string random_string(size_t length)
 	return str;
 }
 
+std::string random_string_content()
+{
+	std::string str = sFont[rand() % fontCount];
+	return str;
+}
+
 int main()
 {
 	//SetConsoleOutputCP(65001);
+
+	std::ifstream fp("dm_UTF_8.txt");
+	while (!fp.eof()) {
+		std::string font;
+		fp >> font;
+		sFont.push_back(font);
+	}
 
 	flatbuffers::FlatBufferBuilder fbb;
 
 	// array of comments
 	std::vector<flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<mj2::schema::Comment>>>> arrayOfComments;
-	for (unsigned n0 = 0; n0 < 3; n0++)
+	srand((unsigned)time(NULL));
+	int _a = (rand() % 10);
+	for (unsigned n0 = 0; n0 < _a + 1; n0++)
 	{
 		// Comments
+		int _b = (rand() % 10);
 		std::vector<flatbuffers::Offset<Comment>> comment_offsets;
-		for (unsigned i = 0; i < 5; i++)
+		for (unsigned i = 0; i < _b + 1; i++)
 		{
 			std::string uid = random_string(4);
-			std::string text = random_string(8);
+			std::string text = random_string_content();
 			comment_offsets.push_back(CreateComment(fbb, fbb.CreateString(uid.c_str()), fbb.CreateString(text.c_str())));
 		}
 		auto vec = fbb.CreateVector(comment_offsets);
@@ -95,8 +121,9 @@ int main()
 	for (auto& v : arrayOfComments)
 	{
 		
-		arrayOfSimulComments.push_back( CreateSimulComments(fbb, count++, v) );
-		count++;
+		arrayOfSimulComments.push_back( CreateSimulComments(fbb, count, v) );
+		count += (rand() % 40) + 1;
+		//count++;
 	}
 
 	// SimulComments Vector
